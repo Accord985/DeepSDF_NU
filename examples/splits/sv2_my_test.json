@@ -1,0 +1,47 @@
+{
+  "ShapeNetV2": {
+    "03636649": [
+      "airplane_201",
+      "airplane_202",
+      "airplane_203",
+      "airplane_204",
+      "airplane_205",
+      "airplane_206",
+      "airplane_207",
+      "airplane_208",
+      "airplane_209",
+      "airplane_210",
+      "bus_201",
+      "bus_202",
+      "bus_203",
+      "bus_204",
+      "bus_205",
+      "bus_206",
+      "bus_207",
+      "bus_208",
+      "bus_209",
+      "bus_210",
+      "watercraft_201",
+      "watercraft_202",
+      "watercraft_203",
+      "watercraft_204",
+      "watercraft_205",
+      "watercraft_206",
+      "watercraft_207",
+      "watercraft_208",
+      "watercraft_209",
+      "watercraft_210",
+      "car_201",
+      "car_202",
+      "car_203",
+      "car_204",
+      "car_205",
+      "car_206",
+      "car_207",
+      "car_208",
+      "car_209",
+      "car_210"
+    ]
+  }
+}
+

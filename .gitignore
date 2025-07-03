@@ -1,0 +1,10 @@
+.venv
+__pycache__
+data/LatentCodes/**
+data/ModelParameters/**
+data/OptimizerParameters/**
+data/Reconstructions/**
+*.npz
+latent_epoch_*.txt
+loss.txt
+*.xlsx
