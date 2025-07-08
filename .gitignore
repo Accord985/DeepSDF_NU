@@ -4,6 +4,7 @@ data/LatentCodes/**
 data/ModelParameters/**
 data/OptimizerParameters/**
 data/Reconstructions/**
+data/Logs.pth
 *.npz
 latent_epoch_*.txt
 loss.txt
