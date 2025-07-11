@@ -33,7 +33,7 @@
       "Factor" : 0.5
     }],
   "SamplesPerScene" : 32768,
-  "ScenesPerBatch" : 40,
+  "ScenesPerBatch" : 60,
   "DataLoaderThreads" : 16,
   "ClampingDistance" : 0.1,
   "CodeRegularization" : true,

@@ -55,76 +55,77 @@ def reconstruct(
     maxT = clamp_dist
     enforce_minmax = True
 
-    for e in range(num_iterations):
+    # for e in range(num_iterations):
 
-        decoder.eval()
-        sdf_data = deep_sdf.data.unpack_sdf_samples_from_ram(
-            test_sdf, num_samples
-        ).cuda()
+    #     decoder.eval()
+    #     sdf_data = deep_sdf.data.unpack_sdf_samples_from_ram(
+    #         test_sdf, num_samples
+    #     ).cuda()
         
-        xyz = sdf_data[:, 0:3]
+    #     xyz = sdf_data[:, 0:3]
 
-        L = 10
-        xyz_el = []
+    #     L = 10
+    #     xyz_el = []
 
-        for el in range(0,L):
-            val = 2 ** el
+    #     for el in range(0,L):
+    #         val = 2 ** el
 
-            x = np.sin(val * np.pi * xyz[:, 0].cpu().numpy())
-            xyz_el.append(x)
-            x = np.cos(val * np.pi * xyz[:, 0].cpu().numpy())
-            xyz_el.append(x)
-            y = np.sin(val * np.pi * xyz[:, 1].cpu().numpy())
-            xyz_el.append(y)
-            y = np.cos(val * np.pi * xyz[:, 1].cpu().numpy())
-            xyz_el.append(y)
-            z = np.sin(val * np.pi * xyz[:, 2].cpu().numpy())
-            xyz_el.append(z)
-            z = np.cos(val * np.pi * xyz[:, 2].cpu().numpy()) 
-            xyz_el.append(z)
+    #         x = np.sin(val * np.pi * xyz[:, 0].cpu().numpy())
+    #         xyz_el.append(x)
+    #         x = np.cos(val * np.pi * xyz[:, 0].cpu().numpy())
+    #         xyz_el.append(x)
+    #         y = np.sin(val * np.pi * xyz[:, 1].cpu().numpy())
+    #         xyz_el.append(y)
+    #         y = np.cos(val * np.pi * xyz[:, 1].cpu().numpy())
+    #         xyz_el.append(y)
+    #         z = np.sin(val * np.pi * xyz[:, 2].cpu().numpy())
+    #         xyz_el.append(z)
+    #         z = np.cos(val * np.pi * xyz[:, 2].cpu().numpy()) 
+    #         xyz_el.append(z)
 
-        xyz_el = np.array(xyz_el)
-        xyz_el = torch.tensor(xyz_el, dtype=torch.float32).T
-        #xyz_el = torch.tensor(xyz_el).T
-        xyz = xyz_el
-        sdf_gt = sdf_data[:, 3].unsqueeze(1)
+    #     xyz_el = np.array(xyz_el)
+    #     xyz_el = torch.tensor(xyz_el, dtype=torch.float32).T
+    #     #xyz_el = torch.tensor(xyz_el).T
+    #     xyz = xyz_el
+    #     sdf_gt = sdf_data[:, 3].unsqueeze(1)
 
-        sdf_gt = torch.clamp(sdf_gt, -clamp_dist, clamp_dist)
+    #     sdf_gt = torch.clamp(sdf_gt, -clamp_dist, clamp_dist)
 
-        adjust_learning_rate(lr, optimizer, e, decreased_by, adjust_lr_every)
+    #     adjust_learning_rate(lr, optimizer, e, decreased_by, adjust_lr_every)
 
-        optimizer.zero_grad()
+    #     optimizer.zero_grad()
 
-        latent_inputs = latent.expand(num_samples, -1)
+    #     latent_inputs = latent.expand(num_samples, -1)
 
-        inputs = torch.cat([latent_inputs.cuda(), xyz.cuda()], 1)
+    #     inputs = torch.cat([latent_inputs.cuda(), xyz.cuda()], 1)
 
-        pred_sdf = decoder(inputs)
+    #     pred_sdf = decoder(inputs)
 
-        # TODO: why is this needed?
-        if e == 0:
-            pred_sdf = decoder(inputs)
+    #     # TODO: why is this needed?
+    #     if e == 0:
+    #         pred_sdf = decoder(inputs)
 
-        pred_sdf = torch.clamp(pred_sdf, -clamp_dist, clamp_dist)
+    #     pred_sdf = torch.clamp(pred_sdf, -clamp_dist, clamp_dist)
 
-        loss = loss_l1(pred_sdf, sdf_gt)    
-        if l2reg:
-            loss += 1e-4 * torch.mean(latent.pow(2))
-        loss.backward()
-        optimizer.step()
+    #     loss = loss_l1(pred_sdf, sdf_gt)    
+    #     if l2reg:
+    #         loss += 1e-4 * torch.mean(latent.pow(2))
+    #     loss.backward()
+    #     optimizer.step()
 
-        if e % 50 == 0:
-            logging.debug(loss.cpu().data.numpy())
-            logging.debug(e)
-            logging.debug(latent.norm())
-        loss_num = loss.cpu().data.numpy()
+    #     if e % 50 == 0:
+    #         logging.debug(loss.cpu().data.numpy())
+    #         logging.debug(e)
+    #         logging.debug(latent.norm())
+    #     loss_num = loss.cpu().data.numpy()
 
-    # means_list = [0.005520996, -0.012547219, -0.004975365, 0.001681339, -0.026489312, 0.011676402, 0.02658528, 0.029440958, -0.003096161, -0.006701054, 0.021360265, -0.006143919, -0.02814932, 0.012072136, -0.010563934, -0.030706026, 0.0070554, 0.008844139, -0.005916632, 0.012540568, -0.011084815, -0.030274, 0.022648365, -0.015611669, -0.020734984, 0.004469838, 0.019983489, -0.013408898, 0.015596918, -0.002954856, 0.003465294, 0.012333186, 0.026264839, 0.0252841, 0.013649611, 0.009940355, -0.007092595, 0.013736133, 0.015240351, -0.007368188] # 平均値
+
+    # means_list = [-0.088252708, -0.060127965, 0.135244924, 0.020593424, -0.055333361, 0.069744203, 0.069689728, -0.055886635, 0.057714869, -0.008186957, 0.103357255, 0.039989605, 0.052598173, -0.072453304, 0.065518804, 0.181675028, -0.105026161, 0.061343282, -0.02518095, 0.09690551, 0.095963531, 0.038457119, -0.07432678, -0.105215738, 0.145905842, 0.042967927, 0.11459878, 0.002010728, 0.075405022, 0.071795317, -0.032409479, 0.093865516, 0.025118494, 0.002511153, 0.032000032, 0.041857186, 0.065111254, 0.046732632, 0.049885656, -0.111013571] # 平均値
     # if len(means_list) < latent_size:
     #     means_list.extend([0.0] * (latent_size - len(means_list))) # 足りない場合は0で埋める (必要に応じて変更)
     # means = torch.tensor(means_list).float()
 
-    # stds_list = [0.137812604, 0.127337706, 0.166447835, 0.125315042, 0.150552954, 0.131581895, 0.131364864, 0.147621291, 0.137656617, 0.145154149, 0.122065383, 0.135400064, 0.12298796, 0.144837127, 0.145894223, 0.152496485, 0.159087613, 0.146982587, 0.134903452, 0.153211536, 0.145440148, 0.130786875, 0.158340973, 0.136564079, 0.13627438, 0.138197789, 0.140747448, 0.139792739, 0.131838043, 0.12880111, 0.141944621, 0.141399522, 0.151067955, 0.130762302, 0.132840619, 0.131526149, 0.144109777, 0.158203106, 0.135004588, 0.143835015] # 標準偏差
+    # stds_list = [0.115807795, 0.113318598, 0.123815184, 0.122643554, 0.117808481, 0.115125585, 0.113453796, 0.111764442, 0.143409599, 0.115687013, 0.123427045, 0.10960875, 0.117959895, 0.109923344, 0.13837213, 0.125639355, 0.13137555, 0.121191261, 0.117800373, 0.124766884, 0.138802477, 0.125385779, 0.112171963, 0.130810324, 0.150154867, 0.121535445, 0.12017991, 0.13042704, 0.123079801, 0.10735855, 0.129748529, 0.14382685, 0.127712679, 0.141228901, 0.114628551, 0.124265615, 0.123917619, 0.126004903, 0.111952904, 0.156209707] # 標準偏差
     # if len(stds_list) < latent_size:
     #     stds_list.extend([1.0] * (latent_size - len(stds_list))) # 足りない場合は1で埋める (必要に応じて変更)
     # stds = torch.tensor(stds_list).float()
@@ -134,8 +135,16 @@ def reconstruct(
     # for i in range(latent_size):
     #     latent[0, i] = torch.normal(mean=means[i], std=stds[i])
 
+
+    global i, latent_data
+    latent = torch.tensor(latent_data[i], dtype=torch.float32).unsqueeze(0).cuda()
+    i = i + 1
+
     return loss_num, latent
 
+i = 401
+file_path = "Locus in latent vector space.txt"
+latent_data = np.loadtxt(file_path)
 
 if __name__ == "__main__":
 
