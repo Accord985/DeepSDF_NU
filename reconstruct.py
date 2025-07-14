@@ -142,7 +142,7 @@ def reconstruct(
 
     return loss_num, latent
 
-i = 401
+i = 0
 file_path = "Locus in latent vector space.txt"
 latent_data = np.loadtxt(file_path)
 
